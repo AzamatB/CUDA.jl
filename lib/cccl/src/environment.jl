@@ -26,17 +26,29 @@ The JLLs CUDA.jl uses do not ship the CUDA runtime headers, so this currently ne
 CUDA toolkit.
 """
 function toolkit_path()
+    dir = find_toolkit()
+    if dir === nothing
+        error("CCCL needs a local CUDA toolkit (looked in $(join(toolkit_candidates(), ", "))); " *
+              "set CUDA_PATH to point to one")
+    end
+    return dir
+end
+
+function toolkit_candidates()
     candidates = String[]
     for var in ("CUDA_PATH", "CUDA_HOME")
         haskey(ENV, var) && push!(candidates, ENV[var])
     end
     append!(candidates, ["/usr/local/cuda", "/opt/cuda"])
-    for dir in candidates
+    return candidates
+end
+
+function find_toolkit()
+    for dir in toolkit_candidates()
         if isfile(joinpath(dir, "include", "cuda_runtime.h")) &&
            isfile(joinpath(dir, "nvvm", "libdevice", "libdevice.10.bc"))
             return dir
         end
     end
-    error("CCCL needs a local CUDA toolkit (looked in $(join(candidates, ", "))); " *
-          "set CUDA_PATH to point to one")
+    return nothing
 end
