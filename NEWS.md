@@ -110,6 +110,10 @@ CUDA 13 driver. Requires CUDA_Runtime_jll 0.26 and CUDNN_jll 9.28.
 
 *Bug fixes*:
 
+- The `default_memory` and `nonblocking_synchronization` preferences are documented
+  under `[CUDACore]` in `LocalPreferences.toml`. Since v6.0, CUDACore reads them from
+  that section, and setting them under `[CUDA]`, as the documentation said to, had no
+  effect. CUDA.jl now warns when they are set under `[CUDA]`.
 - `CUDA.@profile` no longer deadlocks when NVTX.jl's GC hooks are enabled
   (`JULIA_NVTX_CALLBACKS=gc`). CUPTI's activity buffers are now managed by native code, so
   CUPTI can request one while Julia collects garbage.
