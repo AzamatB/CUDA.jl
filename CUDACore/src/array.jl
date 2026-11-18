@@ -154,7 +154,7 @@ const default_memory = let str = Preferences.@load_preference("default_memory", 
   elseif str == "host"
     HostMemory
   else
-    error("unknown default memory type: $default_memory")
+    error("unknown default memory type: $str")
   end
 end
 CuArray{T,N}(::UndefInitializer, dims::Dims{N}) where {T,N} =
